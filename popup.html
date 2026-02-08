@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balance Hider</title>
+    <style>
+        :root {
+            --bg-1: #0e1514;
+            --bg-2: #1b2a25;
+            --panel: rgba(18, 28, 26, 0.78);
+            --panel-border: rgba(80, 160, 130, 0.35);
+            --text: #e8f6f0;
+            --muted: rgba(232, 246, 240, 0.7);
+            --accent: #35c476;
+            --accent-strong: #2ea365;
+            --accent-glow: rgba(53, 196, 118, 0.35);
+            --danger: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 320px;
+            padding: 16px;
+            font-family: "Rubik", "Montserrat", "DM Sans", sans-serif;
+            background:
+                radial-gradient(120px 120px at 18% 12%, rgba(53, 196, 118, 0.18), transparent 60%),
+                radial-gradient(140px 140px at 85% 20%, rgba(72, 150, 120, 0.12), transparent 60%),
+                linear-gradient(160deg, var(--bg-1), var(--bg-2));
+            color: var(--text);
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            padding: 6px;
+            background: rgba(12, 20, 18, 0.7);
+            border: 1px solid rgba(72, 150, 120, 0.4);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35), 0 0 18px var(--accent-glow);
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .option {
+            background: var(--panel);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
+        }
+
+        .option-title {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            column-gap: 12px;
+            min-height: 28px;
+        }
+
+        .option-name {
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            line-height: 1.2;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            flex: 0 0 auto;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(232, 246, 240, 0.2);
+            transition: 0.3s;
+            border-radius: 26px;
+            border: 1px solid rgba(53, 196, 118, 0.35);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            top: 3px;
+            background-color: #dff5ea;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent);
+            border-color: var(--accent-strong);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+            background-color: #f0fff8;
+        }
+
+        .option-desc {
+            font-size: 11px;
+            margin-top: 6px;
+            color: var(--muted);
+            text-align: left;
+        }
+
+        #fakeMoneyInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(53, 196, 118, 0.35);
+            background: rgba(9, 14, 13, 0.55);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #fakeMoneyInput::placeholder {
+            color: rgba(232, 246, 240, 0.5);
+        }
+
+        #fakeMoneyInput:focus {
+            border-color: var(--accent);
+            background: rgba(14, 22, 20, 0.7);
+            box-shadow: 0 0 0 3px rgba(53, 196, 118, 0.2);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #06130f;
+            border-color: rgba(74, 220, 150, 0.6);
+            box-shadow: 0 8px 14px rgba(53, 196, 118, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-strong);
+        }
+
+        .btn-danger {
+            background: rgba(255, 107, 107, 0.18);
+            color: #ffd7d7;
+            border-color: rgba(255, 107, 107, 0.45);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 107, 107, 0.3);
+        }
+
+        #fakeMoneyError {
+            color: var(--danger);
+            font-size: 11px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        #fakeMoneySection {
+            margin-top: 12px;
+            display: none;
+        }
+
+        .site-notice {
+            background: rgba(18, 28, 26, 0.9);
+            border: 1px solid rgba(80, 160, 130, 0.45);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-align: left;
+            line-height: 1.4;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .site-notice strong {
+            color: #b9f5d3;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="icon" src="images/icon-128.png" alt="Balance Hider icon">
+            <div>
+                <h1>Fiverr Balance Hider</h1>
+                <div class="subtitle">Hide and mask Fiverr balances</div>
+            </div>
+        </div>
+        <div id="siteNotice" class="site-notice" style="display: none;">
+            Open <strong>Fiverr.com</strong> in the active tab to use Balance Hider.
+        </div>
+        <div id="controls">
+            <div class="option">
+                <div class="option-title">
+                    <div class="option-name">Hide All Balances</div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleSwitch" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="option-desc">Hide balance across Fiverr</div>
+            </div>
+            <div class="option">
+                <div class="option-title">
+                    <div class="option-name">Hide on Earnings Page</div>
+                    <label class="switch">
+                        <input type="checkbox" id="earningsToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="option-desc">Hide money details on the earnings page</div>
+            </div>
+            <div class="option">
+                <div class="option-title">
+                    <div class="option-name">Show Fake Money</div>
+                    <label class="switch">
+                        <input type="checkbox" id="fakeMoneyToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="option-desc">Display custom fake money amounts</div>
+                <div id="fakeMoneySection">
+                    <input type="text" id="fakeMoneyInput" placeholder="e.g., US$1850000 or US$185 to US$10,000" />
+                    <div class="button-grid">
+                        <button id="saveFakeMoneyBtn" class="btn btn-primary">Save</button>
+                        <button id="resetFakeMoneyBtn" class="btn btn-danger">Reset</button>
+                    </div>
+                    <div id="fakeMoneyError"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
