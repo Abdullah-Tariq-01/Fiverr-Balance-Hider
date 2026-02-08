@@ -32,5 +32,5 @@ Example fake money: `US$185 to US$10,000`
 
 ## 📄 License
 
-Distributed under the Apache License 2.0.  
+Distributed under the MIT License.  
 See the [LICENSE](https://github.com/Abdullah-Tariq-01/Fiverr-Balance-Hider/blob/main/LICENSE) file for details.
